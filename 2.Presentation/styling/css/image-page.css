@@ -1,0 +1,106 @@
+body {
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#my-paragraph {
+    color: rgb(228, 188, 128);
+}
+
+.main-text {
+    color: rgb(232, 186, 239);
+}
+
+.another-class {
+    color: rgb(158, 192, 158);
+}
+
+/* 🔹 Contenedor para foto + orbitantes */
+.profile-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 2rem;
+}
+
+main {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: x-large;
+    width: 50vw;
+    height: 100vh;
+    margin: 0 auto;
+    padding: 10vh 15vw;
+}
+
+img#Priscila {
+    width: 240px;
+    padding: 1rem;
+    border-radius: 50px;
+    transform: rotate(270deg); 
+}
+
+img#Priscila:hover {
+    filter: drop-shadow(20px 20px 10px rgba(210, 140, 219, 0.5));
+}
+
+img#Robot1,
+img#Robot2 {
+    width: 200px;
+    height: auto;
+    border-radius: 20px;
+    padding: 0.5rem;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+img#Robot1:hover,
+img#Robot2:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(10px 10px 6px rgba(100, 100, 100, 0.4));
+}
+
+/* --- Animaciones --- */
+@keyframes orbit {
+    from {
+        transform: rotate(0deg) translateX(150px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(150px) rotate(-360deg);
+    }
+}
+
+@keyframes orbit-heart {
+    from {
+        transform: rotate(0deg) translateX(200px) rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg) translateX(200px) rotate(-360deg);
+    }
+}
+
+/* Estrella orbitando */
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    transform-origin: -150px center;
+    animation: orbit 6s linear infinite;
+}
+
+/* Corazón orbitando */
+.heart {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 70px;
+    height: 70px;
+    transform-origin: -200px center;
+    animation: orbit-heart 8s linear infinite;
+}

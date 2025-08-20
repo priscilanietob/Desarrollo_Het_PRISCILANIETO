@@ -1,0 +1,35 @@
+body {
+    background-color: #6c90c5f0;
+}
+
+h1,
+p {
+    color: #f3cbcb;
+}
+
+/* Tabla */
+table {
+    color: rgb(120, 60, 150);
+    font-size: large;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th, 
+table td {
+    background-color: #ccbdd6;
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background-color: #f0e6f6;
+    color: rgb(80, 30, 120);
+}
+
+.profile-link a {
+    color: #4B0082; 
+    text-decoration: underline;
+    white-space: nowrap; 
+}
