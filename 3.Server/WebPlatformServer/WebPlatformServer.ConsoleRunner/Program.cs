@@ -9,8 +9,7 @@ namespace WebPlatformServer.ConsoleRunner
         {
             try
             {
-                // Use the ABSOLUTE path to your 2.Presentation folder
-                string webPath = @"C:\Users\prisc\OneDrive\Documentos\GitHub\Desarrollo_Het_PRISCILANIETO\2.Presentation\styling\index.html";
+                string webPath = @"C:\Users\prisc\OneDrive\Documentos\GitHub\Desarrollo_Het_PRISCILANIETO\2.Presentation";
                 
                 Console.WriteLine($"Using directory: {webPath}");
                 Console.WriteLine($"Directory exists: {Directory.Exists(webPath)}");
@@ -21,7 +20,6 @@ namespace WebPlatformServer.ConsoleRunner
                     return;
                 }
 
-                // Show what's in the directory
                 Console.WriteLine("\nDirectory contents:");
                 var files = Directory.GetFiles(webPath, "*", SearchOption.AllDirectories);
                 foreach (var file in files)
