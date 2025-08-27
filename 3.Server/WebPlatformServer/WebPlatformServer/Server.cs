@@ -23,7 +23,6 @@ namespace WebPlatformServer
             Console.WriteLine($"DEBUG: StaticFilesDirectory set to: {StaticFilesDirectory}");
             Console.WriteLine($"DEBUG: Full path: {Path.GetFullPath(StaticFilesDirectory)}");
 
-            // Asegurar que el directorio existe
             if (!Directory.Exists(StaticFilesDirectory))
             {
                 try
@@ -91,7 +90,6 @@ namespace WebPlatformServer
                     if (url == "/")
                         url = "/index.html";
 
-                    // Prevenir directory traversal attacks
                     if (url.Contains(".."))
                     {
                         SendResponse(stream, "403 Forbidden", "text/plain", "403 Forbidden: Directory traversal not allowed");
@@ -101,7 +99,6 @@ namespace WebPlatformServer
                     var filePath = Path.Combine(StaticFilesDirectory, url.TrimStart('/'));
                     filePath = Path.GetFullPath(filePath); // Obtener ruta absoluta
 
-                    // Verificar que el archivo esté dentro del directorio permitido
                     var allowedPath = Path.GetFullPath(StaticFilesDirectory);
                     if (!filePath.StartsWith(allowedPath))
                     {
@@ -117,7 +114,6 @@ namespace WebPlatformServer
 
                     if (!File.Exists(filePath))
                     {
-                        // Show what files are available for debugging
                         Console.WriteLine("Available files:");
                         try
                         {
