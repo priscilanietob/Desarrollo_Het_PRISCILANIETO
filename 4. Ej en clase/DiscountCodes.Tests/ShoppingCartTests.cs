@@ -1,4 +1,4 @@
-﻿using DiscountCodes.Models;
+﻿﻿using DiscountCodes.Models;
 
 namespace DiscountCodes.Tests
 {

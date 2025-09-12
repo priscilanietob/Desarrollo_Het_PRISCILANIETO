@@ -1,33 +1,39 @@
-﻿namespace DiscountCodes.Models
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace DiscountCodes.Models
 {
     public class ShoppingCart
     {
-        private List<Product> items = new List<Product>();
+        private readonly List<Product> items = new List<Product>();
         public IReadOnlyList<Product> Items => items.AsReadOnly();
+
+        private string appliedDiscountCode = "";
 
         public void AddItem(Product product)
         {
             items.Add(product);
         }
 
-        /// <summary>
-        /// Returns the total price of all items in the cart, after applying any discounts.
-        /// </summary>
-        /// <returns></returns>
         public decimal GetTotal()
         {
-            return items.Sum(item => item.Price);
+            decimal total = items.Sum(item => item.Price);
+
+            switch (appliedDiscountCode)
+            {
+                case "10PERCENTOFF":
+                    total *= 0.9m; 
+                    break;
+
+            }
+
+            return total;
         }
 
-        /// <summary>
-        /// Applies a discount code to the shopping cart.
-        /// If the code is invalid or empty, no discount is applied.
-        /// Only one discount code can be applied at a time, applying a new code replaces the previous one.
-        /// </summary>
-        /// <param name="code"></param>
         public void ApplyDiscount(string code)
         {
-            // TODO: Implement discount codes
+            appliedDiscountCode = code?.ToUpperInvariant() ?? "";
         }
     }
 }
