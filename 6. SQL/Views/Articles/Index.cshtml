@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Blog.Models.Article>
+
+@{
+    ViewData["Title"] = "Blog";
+
+    // Obtener los parámetros del querystring para las fechas
+    var qStart = Context.Request.Query["startDate"].ToString();
+    var qEnd   = Context.Request.Query["endDate"].ToString();
+
+    // Convertir fechas a formato yyyy-MM-dd para los <input type="date">
+    string startVal = DateTimeOffset.TryParse(qStart, out var _sd)
+        ? _sd.ToString("yyyy-MM-dd") : "";
+    string endVal = DateTimeOffset.TryParse(qEnd, out var _ed)
+        ? _ed.ToString("yyyy-MM-dd") : "";
+}
+
+<h1 class="mb-3">Published Articles</h1>
+
+<form class="row row-cols-lg-auto g-3 align-items-end mb-4" asp-action="Index" method="get">
+    <div class="col-12">
+        <label class="form-label" for="startDate">Start date</label>
+        <input id="startDate" class="form-control" type="date" name="startDate" value="@startVal" />
+    </div>
+
+    <div class="col-12">
+        <label class="form-label" for="endDate">End date</label>
+        <input id="endDate" class="form-control" type="date" name="endDate" value="@endVal" />
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit">Filter</button>
+        <a asp-action="Index" class="btn btn-outline-secondary">Clear</a>
+    </div>
+
+    <div class="col-12 ms-lg-auto">
+        <a asp-action="Create" class="btn btn-success">New article</a>
+    </div>
+</form>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info">No articles found.</div>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var a in Model)
+        {
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="me-3">
+                        <h5 class="mb-1 text-break">@a.Title</h5>
+                        <small class="text-muted">
+                            by @a.AuthorName (@a.AuthorEmail) — @a.PublishedDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")
+                        </small>
+                        <p class="mt-2 mb-0 text-break">
+                            @((a.Content?.Length ?? 0) > 220 ? a.Content?.Substring(0, 220) + "…" : a.Content)
+                        </p>
+                    </div>
+                    <div class="text-nowrap">
+                        <a asp-action="Details" asp-route-id="@a.Id" class="btn btn-sm btn-primary">Read</a>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}

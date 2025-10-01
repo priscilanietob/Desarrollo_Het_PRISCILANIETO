@@ -1,0 +1,39 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html, body {
+  height: 100%; 
+  margin: 0;   
+  background-color: #cce7ff; 
+  font-size: 14px;
+}
+
+footer {
+  background-color: #dbaef0; 
+  color: white;            
+  padding: 20px;       
+  text-align: center;       
+}
+
+/* Botón New Article */
+.btn-success {
+  background-color: #608c7d; /* verde clarito */
+  border-color: #608c7d;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #608c7d; /* verde un poco más oscuro */
+  border-color: #608c7d;
+}
