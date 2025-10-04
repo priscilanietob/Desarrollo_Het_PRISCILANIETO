@@ -21,7 +21,7 @@ namespace Blog.Data
         /// <param name="endDate">The end of the date range. Only articles published on or before this date will be included.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Article"/> objects representing the articles published within
         /// the specified date range. If no articles are found, the collection will be empty.</returns>
-        IEnumerable<Article> GetByDateRange(DateTimeOffset startDate, DateTimeOffset endDate);
+        IEnumerable<Article> GetByDateRange(DateTime startDate, DateTime endDate);
 
         /// <summary>
         /// Retrieves an article by its unique identifier.

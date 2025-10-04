@@ -77,14 +77,14 @@ namespace Blog.Data
                     AuthorName = reader.GetString(2),
                     AuthorEmail = reader.GetString(3),
                     Content = reader.GetString(4),
-                    PublishedDate = DateTimeOffset.Parse(reader.GetString(5))
+                    PublishedDate = DateTime.Parse(reader.GetString(5))
                 });
             }
 
             return articles;
         }
 
-        public IEnumerable<Article> GetByDateRange(DateTimeOffset startDate, DateTimeOffset endDate)
+        public IEnumerable<Article> GetByDateRange(DateTime startDate, DateTime endDate)
         {
             var articles = new List<Article>();
 
@@ -111,7 +111,7 @@ namespace Blog.Data
                     AuthorName = reader.GetString(2),
                     AuthorEmail = reader.GetString(3),
                     Content = reader.GetString(4),
-                    PublishedDate = DateTimeOffset.Parse(reader.GetString(5))
+                    PublishedDate = DateTime.Parse(reader.GetString(5))
                 });
             }
 
@@ -141,7 +141,7 @@ namespace Blog.Data
                     AuthorName = reader.GetString(2),
                     AuthorEmail = reader.GetString(3),
                     Content = reader.GetString(4),
-                    PublishedDate = DateTimeOffset.Parse(reader.GetString(5))
+                    PublishedDate = DateTime.Parse(reader.GetString(5))
                 };
             }
 
@@ -210,7 +210,7 @@ namespace Blog.Data
                     Id = reader.GetInt32(0),
                     ArticleId = reader.GetInt32(1),
                     Content = reader.GetString(2),
-                    PublishedDate = DateTimeOffset.Parse(reader.GetString(3))
+                    PublishedDate = DateTime.Parse(reader.GetString(3))
                 });
             }
 

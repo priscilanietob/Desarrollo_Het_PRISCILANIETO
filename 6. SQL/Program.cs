@@ -1,4 +1,5 @@
 using Blog.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog
 {
@@ -8,34 +9,41 @@ namespace Blog
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            ConfigureServices(builder);
+            var app = builder.Build();
+            ConfigureMiddleware(app);
+
+            app.Run();
+        }
+
+        private static void ConfigureServices(WebApplicationBuilder builder)
+        {
             builder.Services.AddControllersWithViews();
 
-            var databaseConfig = builder.Configuration.GetSection("DatabaseConfig").Get<DatabaseConfig>();
-            if (databaseConfig!.UseInMemoryDatabase)
+            // Configuración de base de datos con SQLite
+            builder.Services.AddDbContext<BlogDbContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Configuración de repositorio en memoria o EF
+            var databaseConfig = builder.Configuration
+                                        .GetSection("DatabaseConfig")
+                                        .Get<DatabaseConfig>();
+
+            if (databaseConfig != null && databaseConfig.UseInMemoryDatabase)
             {
                 builder.Services.AddSingleton<IArticleRepository, MemoryArticleRepository>();
             }
             else
             {
-                builder.Services.AddSingleton<IArticleRepository>(services =>
-                {
-                    var config = services.GetRequiredService<IConfiguration>();
-                    var repository = new ArticleRepository(databaseConfig);
-
-                    repository.EnsureCreated();
-
-                    return repository;
-                });
+                builder.Services.AddScoped<IArticleRepository, EfArticleRepository>();
             }
+        }
 
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
+        private static void ConfigureMiddleware(WebApplication app)
+        {
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
@@ -43,14 +51,11 @@ namespace Blog
             app.UseStaticFiles();
 
             app.UseRouting();
-
             app.UseAuthorization();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Articles}/{action=Index}/{id?}");
-
-            app.Run();
         }
     }
 }

@@ -19,7 +19,7 @@ namespace Blog.Data
             return _articles.Values.ToList();
         }
 
-        public IEnumerable<Article> GetByDateRange(DateTimeOffset startDate, DateTimeOffset endDate)
+        public IEnumerable<Article> GetByDateRange(DateTime startDate, DateTime endDate)
         {
             return _articles.Values
                 .Where(a => a.PublishedDate >= startDate && a.PublishedDate <= endDate)

@@ -1,66 +1,64 @@
 ﻿using Blog.Data;
 using Blog.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
     public class ArticlesController : Controller
     {
-        private IArticleRepository _articleRepository;
+        private readonly IArticleRepository _articleRepository;
 
         public ArticlesController(IArticleRepository articleRepository)
         {
             _articleRepository = articleRepository;
         }
 
-        // GET: ArticlesController
         public ActionResult Index(
-            [FromQuery] DateTimeOffset? startDate = null,
-            [FromQuery] DateTimeOffset? endDate = null)
+            [FromQuery] DateTime? startDate = null,
+            [FromQuery] DateTime? endDate = null,
+            [FromQuery] string? authorEmail = null,
+            [FromQuery] string? title = null)
         {
-            if (startDate.HasValue || endDate.HasValue)
-            {
-                var start = startDate ?? DateTimeOffset.MinValue;
-                var end = endDate ?? DateTimeOffset.MaxValue;
-                return View(_articleRepository.GetByDateRange(start, end));
-            }
-            return View(_articleRepository.GetAll());
+            var articles = _articleRepository.GetAll().AsQueryable();
+
+            // filtros aplicados 
+            if (startDate is not null)
+                articles = articles.Where(a => a.PublishedDate >= startDate.Value);
+
+            if (endDate is not null)
+                articles = articles.Where(a => a.PublishedDate <= endDate.Value);
+
+            if (!string.IsNullOrEmpty(authorEmail))
+                articles = articles.Where(a => a.AuthorEmail.ToLower() == authorEmail.ToLower());
+
+            if (!string.IsNullOrEmpty(title))
+                articles = articles.Where(a => a.Title.ToLower().Contains(title.ToLower()));
+
+            return View(articles.ToList());
         }
 
-        // GET: ArticlesController/Details/5
         public ActionResult Details(int id)
         {
             var article = _articleRepository.GetById(id);
-            if (article == null)
-            {
-                return NotFound();
-            }
+            if (article is null) return NotFound();
 
             var comments = _articleRepository.GetCommentsByArticleId(id);
-
             var viewModel = new ArticleDetailsViewModel(article, comments);
+
             return View(viewModel);
         }
 
-        // GET: ArticlesController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+        public ActionResult Create() => View();
 
-        // POST: ArticlesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(Article article)
         {
             if (!ModelState.IsValid)
-            {
                 return View(article);
-            }
 
-            article.PublishedDate = DateTimeOffset.UtcNow;
-            Article created = _articleRepository.Create(article);
+            article.PublishedDate = DateTime.UtcNow;
+            var created = _articleRepository.Create(article);
 
             return RedirectToAction(nameof(Details), new { id = created.Id });
         }
@@ -69,18 +67,15 @@ namespace Blog.Controllers
         [Route("Articles/{articleId}/AddComment")]
         public ActionResult AddComment(int articleId, Comment comment)
         {
-            Article? article = _articleRepository.GetById(articleId);
-            if (article == null)
-            {
-                return NotFound();
-            }
-            if (string.IsNullOrEmpty(comment.Content))
-            {
+            var article = _articleRepository.GetById(articleId);
+            if (article is null) return NotFound();
+
+            if (string.IsNullOrWhiteSpace(comment.Content))
                 return BadRequest();
-            }
 
             comment.ArticleId = articleId;
-            comment.PublishedDate = DateTimeOffset.UtcNow;
+            comment.PublishedDate = DateTime.UtcNow;
+
             _articleRepository.AddComment(comment);
 
             return RedirectToAction(nameof(Details), new { id = articleId });

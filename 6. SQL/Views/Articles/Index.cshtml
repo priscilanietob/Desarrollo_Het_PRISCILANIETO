@@ -3,14 +3,14 @@
 @{
     ViewData["Title"] = "Blog";
 
-    // Obtener los parámetros del querystring para las fechas
     var qStart = Context.Request.Query["startDate"].ToString();
     var qEnd   = Context.Request.Query["endDate"].ToString();
+    var qEmail = Context.Request.Query["authorEmail"].ToString();
+    var qTitle = Context.Request.Query["title"].ToString();
 
-    // Convertir fechas a formato yyyy-MM-dd para los <input type="date">
-    string startVal = DateTimeOffset.TryParse(qStart, out var _sd)
+    string startVal = DateTime.TryParse(qStart, out var _sd)
         ? _sd.ToString("yyyy-MM-dd") : "";
-    string endVal = DateTimeOffset.TryParse(qEnd, out var _ed)
+    string endVal = DateTime.TryParse(qEnd, out var _ed)
         ? _ed.ToString("yyyy-MM-dd") : "";
 }
 
@@ -25,6 +25,16 @@
     <div class="col-12">
         <label class="form-label" for="endDate">End date</label>
         <input id="endDate" class="form-control" type="date" name="endDate" value="@endVal" />
+    </div>
+
+    <div class="col-12">
+        <label class="form-label" for="authorEmail">Author email</label>
+        <input id="authorEmail" class="form-control" type="text" name="authorEmail" value="@qEmail" placeholder="example@mail.com" />
+    </div>
+
+    <div class="col-12">
+        <label class="form-label" for="title">Title</label>
+        <input id="title" class="form-control" type="text" name="title" value="@qTitle" placeholder="Search title..." />
     </div>
 
     <div class="col-12">
