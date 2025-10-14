@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Pago";
+}
+
+<div class="payment-container">
+
+    <!-- Título -->
+    <h1 class="payment-title">Pago Efectivo</h1>
+
+    <!-- Total a pagar -->
+    <div class="payment-total-display">
+        <label>Total a Pagar:</label>
+        <span id="totalPagar" class="payment-total-amount">@ViewBag.Total.ToString("C")</span>
+    </div>
+
+    <!-- Formulario de pago en efectivo -->
+    <form asp-action="Procesar" method="post" onsubmit="return validarPago()">
+        <div class="payment-form">
+            <label>Efectivo Recibido:</label>
+            <input type="number" step="0.01" id="efectivoRecibido" name="efectivoRecibido" class="payment-input" required />
+            <span id="mensajeError" class="text-danger" style="display: none;"></span>
+        </div>
+
+        <input type="hidden" name="metodo" value="Efectivo" />
+
+        <!-- Botones -->
+        <div class="payment-buttons" style="display:flex; justify-content:space-between; margin-top:20px;">
+            <!-- Boton Volver (gris) -->
+            <button type="button" class="start-button payment-back-button" id="btnAtras">Volver</button>
+
+            <!-- Pagar en efectivo (verde) -->
+            <button type="submit" class="start-button payment-pay-button">Pagar</button>
+
+            <!-- Pago con Tarjeta (vino) -->
+            <a href="@Url.Action("Tarjeta", "Payment")" class="start-button payment-card-button">Pago con Tarjeta</a>
+        </div>
+    </form>
+
+</div>
+
+<script>
+    document.getElementById("btnAtras").addEventListener("click", function () {
+        window.location.href = '/Checkout/Index';
+    });
+
+    // --- Validacin de efectivo ---
+    function validarPago() {
+        const total = @ViewBag.Total;
+        const efectivoInput = document.getElementById('efectivoRecibido');
+        const mensajeError = document.getElementById('mensajeError');
+        const efectivo = parseFloat(efectivoInput.value) || 0;
+
+        if (efectivo < total) {
+            mensajeError.textContent = 'El efectivo recibido debe ser mayor o igual al total';
+            mensajeError.style.display = 'block';
+            efectivoInput.focus();
+            return false;
+        }
+
+        mensajeError.style.display = 'none';
+        return true;
+    }
+
+    document.getElementById('efectivoRecibido')?.addEventListener('input', function() {
+        const total = @ViewBag.Total;
+        const efectivo = parseFloat(this.value) || 0;
+        const mensajeError = document.getElementById('mensajeError');
+        
+        if (efectivo < total) {
+            mensajeError.textContent = 'El efectivo recibido debe ser mayor o igual al total';
+            mensajeError.style.display = 'block';
+        } else {
+            mensajeError.style.display = 'none';
+        }
+    });
+</script>
+
+<style>
+.payment-buttons button,
+.payment-buttons a {
+    padding: 15px 50px;
+    font-size: 1.3rem;
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    line-height: normal;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    text-decoration: none;
+}
+
+/* Colores */
+.payment-back-button { background-color: #6c757d; } /* gris */
+.payment-back-button:hover { background-color: #5a6268; }
+
+.payment-pay-button { background-color: #28a745; } /* verde */
+.payment-pay-button:hover { background-color: #218838; }
+
+.payment-card-button { background-color: #800020; } /* vino */
+.payment-card-button:hover { background-color: #66001a; }
+
+.payment-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+</style>

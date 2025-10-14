@@ -1,0 +1,108 @@
+@{
+    ViewData["Title"] = "Pago con Tarjeta";
+}
+
+<div class="payment-container">
+
+    <!-- Titulo -->
+    <h1 class="payment-title">Pago con Tarjeta</h1>
+
+    <!-- Total a pagar -->
+    <div class="payment-total-display">
+        <label>Total a Pagar:</label>
+        <span class="payment-total-amount">@ViewBag.Total.ToString("C")</span>
+    </div>
+
+    <!-- Mensaje de error del controlador -->
+    @if(ViewBag.Error != null)
+    {
+        <div style="color:red; font-weight:bold; margin-bottom:15px;">
+            @ViewBag.Error
+        </div>
+    }
+
+    <!-- Formulario de tarjeta -->
+    <form id="cardPaymentForm" asp-controller="Payment" asp-action="ProcesarTarjeta" method="post">
+        <div class="payment-form">
+            <label>Número de Tarjeta (16 dígitos):</label>
+            <input type="text" maxlength="16" name="numeroTarjeta" id="cardNumber" class="payment-input" placeholder="1234567812345678" />
+        </div>
+
+        <div class="payment-form">
+            <label>PIN (4 dígitos):</label>
+            <input type="password" maxlength="4" name="pin" id="cardPin" class="payment-input" placeholder="****" />
+        </div>
+
+        <!-- Botones -->
+        <div class="payment-buttons" style="display:flex; justify-content:space-between; margin-top:20px;">
+            <!-- Volver al carrito -->
+            <button type="button" class="start-button payment-back-button" id="btnVolver">Volver al Carrito</button>
+
+            <!-- Pagar -->
+            <button type="submit" class="start-button payment-pay-button">Pagar</button>
+        </div>
+    </form>
+
+    <!-- Mensaje JS -->
+    <div id="paymentMessage" style="margin-top:15px; font-weight:bold;"></div>
+</div>
+
+<script>
+    // Volver al carrito
+    document.getElementById("btnVolver").addEventListener("click", function () {
+        window.location.href = '/Checkout/Index';
+    });
+
+    // Validación antes de enviar
+    document.getElementById("cardPaymentForm").addEventListener("submit", function (e) {
+        const cardNumber = document.getElementById("cardNumber").value.trim();
+        const cardPin = document.getElementById("cardPin").value.trim();
+        const messageDiv = document.getElementById("paymentMessage");
+
+        if (!/^\d{16}$/.test(cardNumber)) {
+            e.preventDefault();
+            messageDiv.style.color = "red";
+            messageDiv.textContent = "El número de tarjeta debe tener 16 dígitos.";
+            return;
+        }
+
+        if (!/^\d{4}$/.test(cardPin)) {
+            e.preventDefault();
+            messageDiv.style.color = "red";
+            messageDiv.textContent = "El PIN debe tener 4 dígitos.";
+            return;
+        }
+    });
+</script>
+
+<style>
+.payment-buttons button {
+    padding: 15px 50px;
+    font-size: 1.3rem;
+    border-radius: 12px;
+    color: #fff;
+    text-align: center;
+    line-height: normal;
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+/* Colores */
+.payment-back-button { background-color: #6c757d; } /* gris */
+.payment-back-button:hover { background-color: #5a6268; }
+
+.payment-pay-button { background-color: #28a745; } /* verde */
+.payment-pay-button:hover { background-color: #218838; }
+
+.payment-input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+</style>

@@ -1,0 +1,49 @@
+@model Autocobro.Models.Reporte
+
+@{
+    ViewData["Title"] = "Reporte Diario de Ventas";
+}
+
+<h1>Reporte Diario de Ventas</h1>
+
+<section>
+    <h3>Resumen General</h3>
+    <p><strong>Total de Ventas:</strong> @Model.VentasTotales</p>
+    <p><strong>Ingresos Totales:</strong> $@Model.IngresosTotales</p>
+    <p><strong>Ingresos en Efectivo:</strong> $@Model.IngresosEfectivo</p>
+    <p><strong>Ingresos con Tarjeta:</strong> $@Model.IngresosTarjeta</p>
+</section>
+
+<section>
+    <h3>Top 10 Productos mas vendidos</h3>
+    @if (Model.TopProductos != null && Model.TopProductos.Any())
+    {
+        <ol>
+            @foreach (var producto in Model.TopProductos.Take(10))
+            {
+                <li>@producto</li>
+            }
+        </ol>
+    }
+    else
+    {
+        <p>No hay datos disponibles.</p>
+    }
+</section>
+
+<section>
+    <h3>Top 3 Categorias mas Vendidas</h3>
+    @if (Model.TopCategorias != null && Model.TopCategorias.Any())
+    {
+        <ol>
+            @foreach (var categoria in Model.TopCategorias.Take(3))
+            {
+                <li>@categoria</li>
+            }
+        </ol>
+    }
+    else
+    {
+        <p>No hay datos disponibles.</p>
+    }
+</section>

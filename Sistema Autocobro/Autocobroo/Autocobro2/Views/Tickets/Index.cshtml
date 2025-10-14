@@ -1,0 +1,27 @@
+@model Autocobro.Models.Ticket
+@{
+    ViewData["Title"] = "Recibo";
+}
+<h2>Recibo de Compra</h2>
+<p><strong>Fecha:</strong> @Model.Fecha</p>
+<p><strong>Método de pago:</strong> @Model.MetodoPago</p>
+<p><strong>Total:</strong> @Model.Total.ToString("C")</p>
+<p><strong>Cambio:</strong> @Model.Cambio.ToString("C")</p>
+
+<table class="table">
+    <thead>
+        <tr><th>Producto</th><th>Cantidad</th><th>Subtotal</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Producto.Nombre</td>
+                <td>@item.Cantidad</td>
+                <td>@item.Subtotal.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="/" class="btn btn-primary">Regresar al inicio</a>

@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Panel Admin";
+}
+
+<div class="admin-container">
+    <h1>Panel de Admin</h1>
+    <p>Selecciona una:</p>
+
+    <div class="admin-buttons">
+ <a href="/Admin/Tickets" class="admin-btn">Búsqueda de Tickets</a>
+<a href="/Admin/Reportes" class="admin-btn">Reportes</a>
+    </div>
+
+    <div class="admin-return">
+        <a href="/Home" asp-action="Index" class="return-btn">Volver a Home</a>
+    </div>
+</div>

@@ -1,0 +1,153 @@
+@model List<Autocobro.Models.ItemCarrito>
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="checkout-container">
+
+    <!-- Header -->
+    <div class="checkout-header">
+        <h1 class="checkout-title">Carrito de compras</h1>
+        <a href="/Products/Index" class="start-button checkout-products-button">Productos Disponibles</a>
+    </div>
+
+    <!-- Barra busqueda -->
+    <div class="checkout-search-form">
+        <input list="productos" id="busquedaProducto" placeholder="Buscar producto..." class="checkout-search-input" />
+        <datalist id="productos">
+            @foreach (var producto in ViewBag.ProductosDisponibles)
+            {
+                <option value="@producto.CodigoDeBarras">@producto.Nombre</option>
+            }
+        </datalist>
+
+        <!-- Input de cantidad -->
+        <input type="number" id="cantidadProducto" value="1" min="1" class="checkout-quantity-input" />
+        <button type="button" class="start-button" id="btnAgregar">Agregar</button>
+    </div>
+
+    <!-- Tabla del carrito -->
+    <table class="checkout-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Eliminar Producto</th>
+            </tr>
+        </thead>
+        <tbody id="bodyCarrito">
+            <tr>
+                <td colspan="5" class="checkout-empty">Ningún producto seleccionado</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="checkout-bottom">
+        <!-- Home a la izquierda -->
+        <button type="button" class="start-button checkout-home-button" id="btnInicio">Volver</button>
+
+        <!-- Botón Pagar a la derecha -->
+        <button type="button" class="checkout-pay-button" id="btnPagar">Pagar</button>
+    </div>
+</div>
+
+<script>
+    // --- Redirigir al Home ---
+    document.getElementById("btnInicio").addEventListener("click", function () {
+        window.location.href = '/Home/Index';
+    });
+
+    // --- Redirigir a Pagar ---
+    document.getElementById("btnPagar").addEventListener("click", function () {
+        window.location.href = '/Payment/Index';
+    });
+
+    // --- Función para actualizar la tabla del carrito ---
+    function actualizarTabla(carrito) {
+        let tbody = document.getElementById("bodyCarrito");
+        tbody.innerHTML = "";
+
+        if (carrito.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="checkout-empty">Ningún producto seleccionado</td></tr>';
+        } else {
+            carrito.forEach(item => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${item.nombre}</td>
+                        <td>$${item.precio.toFixed(2)}</td>
+                        <td>${item.cantidad}</td>
+                        <td>$${item.subtotal.toFixed(2)}</td>
+                        <td>
+                            <button class="start-button eliminar-btn" data-codigo="${item.codigoDeBarras}" style="padding:5px 15px; font-size:1rem;">Eliminar</button>
+                        </td>
+                    </tr>`;
+            });
+
+            document.querySelectorAll(".eliminar-btn").forEach(btn => {
+                btn.addEventListener("click", function () {
+                    const codigo = this.getAttribute("data-codigo");
+                    fetch('/Checkout/EliminarAjax', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(codigo)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            actualizarTabla(data.carrito);
+                        }
+                    });
+                });
+            });
+        }
+    }
+
+    document.getElementById("btnAgregar").addEventListener("click", function () {
+        let busqueda = document.getElementById("busquedaProducto").value;
+        let cantidad = parseInt(document.getElementById("cantidadProducto").value);
+
+        if (!busqueda || cantidad < 1) return;
+
+        fetch('/Checkout/AgregarAjax', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ Busqueda: busqueda, Cantidad: cantidad })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                actualizarTabla(data.carrito);
+                document.getElementById("busquedaProducto").value = '';
+                document.getElementById("cantidadProducto").value = 1;
+            }
+        });
+    });
+</script>
+
+<style>
+.checkout-bottom {
+    display: flex;
+    justify-content: space-between; /* Tres botones distribuidos */
+    margin-top: 20px;
+}
+
+.checkout-home-button,
+.checkout-pay-button {
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+/* Colores de botones */
+.checkout-home-button { background-color: #800020; }
+.checkout-home-button:hover { background-color: #404140; }
+
+.checkout-pay-button { background-color: #28a745; } /* verde */
+.checkout-pay-button:hover { background-color: #218838; }
+</style>

@@ -1,0 +1,104 @@
+@model List<Autocobro.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos Disponibles";
+    var productosOrdenados = Model.OrderBy(p => p.Categoria).ToList(); // Ordenar por categoría
+}
+
+<div class="products-container">
+    <h1 class="products-title">Productos Disponibles</h1>
+
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th>Marca</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Código de Barras</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!productosOrdenados.Any())
+            {
+                <tr>
+                    <td colspan="5" style="text-align:center; font-style:italic;">No hay productos disponibles</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var producto in productosOrdenados)
+                {
+                    <tr>
+                        <td>@producto.Marca</td>
+                        <td>@producto.Nombre</td>
+                        <td>@producto.Categoria</td>
+                        <td>$@producto.Precio.ToString("F2")</td>
+                        <td>@producto.CodigoDeBarras</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <!-- Botón Regresar al Checkout -->
+    <button type="button" class="products-back-button" onclick="window.location.href='/Checkout/Index'">Regresar a Checkout</button>
+</div>
+
+<style>
+.products-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'CheekBoneDemo', sans-serif;
+}
+
+.products-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.products-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Tabla más pequeña con margen superior */
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    margin-top: 3000px; /* ajusta según lo necesites */
+}
+
+.products-table th,
+.products-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.products-table th {
+    background-color: #f5f5f5;
+}
+
+/* Botón Volver al Checkout */
+.products-back-button {
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    background-color: #6c757d; /* gris */
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.products-back-button:hover {
+    background-color: #5a6268;
+}
+</style>
