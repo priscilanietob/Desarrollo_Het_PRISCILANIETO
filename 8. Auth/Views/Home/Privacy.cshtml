@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Página Protegida";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Iniciaste sesión correctamente. Estos son tus datos:</p>
+
+<div class="card" style="width: 25rem;">
+    
+    <img src="@ViewData["UserImageUrl"]" class="card-img-top" alt="Foto de Perfil">
+    
+    <div class="card-body">
+        <h5 class="card-title">Datos del Usuario</h5>
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            <strong>Nombre:</strong> @ViewData["UserName"]
+        </li>
+        <li class="list-group-item">
+            <strong>Email:</strong> @ViewData["UserEmail"]
+        </li>
+    </ul>
+    <div class="card-body">
+        <a asp-controller="Account" asp-action="Logout" class="btn btn-danger">Cerrar Sesión</a>
+    </div>
+</div>

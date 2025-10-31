@@ -1,0 +1,18 @@
+﻿@{
+    ViewData["Title"] = "Bienvenido";
+}
+
+<div class="text-center">
+    <h1 class="display-4">¡Bienvenido al sitio!</h1>
+    <hr />
+    <p>Para continuar, por favor regístrate o inicia sesión.</p>
+    
+    <div class="mt-4">
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg" style="margin-right: 15px;">
+            Registrarse
+        </a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-success btn-lg">
+            Iniciar Sesión
+        </a>
+    </div>
+</div>
